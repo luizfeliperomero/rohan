@@ -1,0 +1,18 @@
+{
+  "name": "rohan",
+  "version": "1.0.0",
+  "description": "Locate and maintain Rohan scooters",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file=.env index.js"
+  },
+  "author": "Luiz Felipe",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.4"
+  }
+}
