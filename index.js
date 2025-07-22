@@ -4,6 +4,7 @@ import user from './routes/user.js';
 import auth from './routes/auth.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 import helmet from 'helmet';
+import errorHandler from '../middlewares/errorHandlerMiddleware.js';
 
 const app = express();
 const dbConnection = async () => {
@@ -25,6 +26,8 @@ app.disable("x-powered-by");
 
 app.use("/api/auth", auth);
 app.use("/api/user", authMiddleware, user);
+
+app.use(errorHandler);
 
 app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
 
