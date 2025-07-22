@@ -10,3 +10,5 @@ const errorHandler = (err, req, res, next) => {
 	    details: err.details
 	});
 }
+
+export default errorHandler;

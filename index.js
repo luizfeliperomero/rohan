@@ -4,7 +4,7 @@ import user from './routes/user.js';
 import auth from './routes/auth.js';
 import authMiddleware from './middlewares/authMiddleware.js';
 import helmet from 'helmet';
-import errorHandler from '../middlewares/errorHandlerMiddleware.js';
+import errorHandler from './middlewares/errorHandlerMiddleware.js';
 
 const app = express();
 const dbConnection = async () => {
