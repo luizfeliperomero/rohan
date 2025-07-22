@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import user from './routes/user.js';
 import auth from './routes/auth.js';
 import authMiddleware from './middlewares/authMiddleware.js';
-import rolesMiddleware from './middlewares/rolesMiddleware.js';
+import helmet from 'helmet';
 
 const app = express();
 const dbConnection = async () => {
@@ -17,7 +17,11 @@ const dbConnection = async () => {
 }
 
 dbConnection();
+
 app.use(express.json());
+
+app.use(helmet);
+app.disable("x-powered-by");
 
 app.use("/api/auth", auth);
 app.use("/api/user", authMiddleware, user);
