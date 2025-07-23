@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js'
+import ApiError from '../utils/ApiError.js'
 
 export const createUser = async (req, res) => {
     try {
@@ -9,24 +10,29 @@ export const createUser = async (req, res) => {
 	const user = await User.create(req.body);
 	res.status(201).json(user);
     } catch(err) {
-	res.status(400).json(err);
+	let msg = "";
+	let statusCode = 500;
+	if(err.code === 11000) {
+	    msg = `Cannot save duplicate field '${Object.keys(err.keyValue)[0]}'`;
+	    statusCode = 409;
+	} else {
+	    msg = `Unknown error ${err.code}`;
+	}
+	throw new ApiError(msg, statusCode);
     }
 }
 
 export const authenticate = async (req, res) => {
     const { email, password } = req.body;
-    try {
-	const user = await User.findOne({email: email});
-	if(bcrypt.compareSync(password, user.password)) {
-	    const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, {expiresIn: "1h"});
-	    const userObj = user.toObject();
-	    delete userObj.password;
-	    userObj.token = token;
-	    res.status(200).json(userObj);
-	} else {
-	    res.status(403).send("Wrong credentials");
-	}
-    } catch(err) {
-	res.status(403).send("Wrong credentials");
+    const user = await User.findOne({email: email});
+
+    if(!user || !bcrypt.compareSync(password, user.password)) {
+	throw new ApiError("Wrong credentials", 403);
     }
+
+    const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, {expiresIn: "1h"});
+    const userObj = user.toObject();
+    delete userObj.password;
+    userObj.token = token;
+    res.status(200).json(userObj);
 };

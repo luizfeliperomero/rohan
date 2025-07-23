@@ -21,7 +21,7 @@ dbConnection();
 
 app.use(express.json());
 
-app.use(helmet);
+app.use(helmet());
 app.disable("x-powered-by");
 
 app.use("/api/auth", auth);
